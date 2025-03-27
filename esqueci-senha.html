@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinir Senha - Bairro Express</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Redefinir senha</h1>
+        <h5>Digite seu e-mail para receber o link de redefinição</h5>
+        <img src="img/logo.png" alt="Logo" width="80">
+        <form id="resetForm">
+            <div id="emailStep">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="E-mail cadastrado" required>
+                <button type="submit" class="btn-login mt-3">Enviar link</button>
+            </div>
+            
+            <div class="alert alert-success mt-3" id="successMessage" style="display: none;">
+                E-mail enviado com sucesso! Verifique sua caixa de entrada.
+            </div>
+            
+            <div class="links mt-3">
+                <a href="index.html">Lembrou sua senha? Faça login</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+ document.getElementById('resetForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/request-reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Mostrar mensagem de sucesso
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        } else {
+            throw new Error(data.error || 'Erro ao enviar e-mail');
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+
+});
+
+    </script>
+</body>
+</html>
